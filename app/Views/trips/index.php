@@ -5,16 +5,13 @@
 <a href="/trips/new">+ Nova viagem</a>
 
 <table border="1" cellpadding="6">
-    <tr>
-        <th>Veículo</th>
-        <th>Motoristas</th>
-        <th>Período</th>
-        <th>KM</th>
-        <th></th>
-    </tr>
+    <tr><th>Veículo</th><th>Motoristas</th><th>Período</th><th>KM</th><th></th></tr>
     <?php foreach ($trips as $trip): ?>
         <tr>
-            <td><?= esc($trip['vehicle_id']) ?></td>
+            <!-- CORRIGIDO: antes mostrava $trip['vehicle_id'] (o número
+                 cru). Agora getTripsWithDetails() já traz o modelo e a
+                 placa do veículo junto (join com vehicles). -->
+            <td><?= esc($trip['vehicle_model']) ?> — <?= esc($trip['vehicle_plate']) ?></td>
             <td>
                 <?= esc(implode(', ', array_column($trip['drivers'], 'name'))) ?>
             </td>

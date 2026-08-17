@@ -2,9 +2,9 @@
 <?= $this->section('content') ?>
 
 <h1>Excluir Veículo</h1>
-<p>Confirma a exclusão de <strong><?= esc($vehicles['model']) . ' Placa:' . esc($vehicles['plate']) ?></strong>?</p>
+<p>Confirma a exclusão de <strong><?= esc($vehicle['model']) . ' Placa:' . esc($vehicle['plate']) ?></strong>?</p>
 
-<form method="post" action="/vehicles/delete/<?= $vehicles['id'] ?>">
+<form method="post" action="/vehicles/delete/<?= $vehicle['id'] ?>">
     <?= csrf_field() ?>
     <button type="submit">Confirmar exclusão</button>
 </form>
