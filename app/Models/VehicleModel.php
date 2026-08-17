@@ -9,7 +9,7 @@ class VehicleModel extends Model
     protected $table = 'vehicles';
     protected $id = 'id';
     protected $useTimestamps = true;
-    protected $allowedFields = ['model', 'year', 'acquisition_date', 'aquisition_km', 'renavam', 'plate'];
+    protected $allowedFields = ['model', 'year', 'acquisition_date', 'acquisition_km', 'renavam', 'plate'];
 
     protected $validationRules = [
         'model' => 'required|max_length[100]',

@@ -3,7 +3,7 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
-$routes->get('/', 'Home::index');
+$routes->get('/', fn() =>  redirect()->to('/vehicles'));
 
 // Authenticação de rotas automática pelo shield
 service('auth')->routes($routes);
