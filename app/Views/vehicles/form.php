@@ -1,32 +1,61 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('content') ?>
 
-<h1><?= $vehicle ? 'Editar veículo' : 'Novo veículo' ?></h1>
+<div class="mx-auto max-w-2xl">
+    <div class="card p-8">
+        <h1 class="mb-6 text-xl font-bold text-slate-900">
+            <?= $vehicle ? 'Editar veículo' : 'Novo veículo' ?>
+        </h1>
 
-<form method="post" action="<?= $vehicle ? '/vehicles/update/' . $vehicle['id'] : '/vehicles/create' ?>">
-    <?= csrf_field() ?>
+        <form method="post" action="<?= $vehicle ? '/vehicles/update/' . $vehicle['id'] : '/vehicles/create' ?>">
+            <?= csrf_field() ?>
 
-    <label>Modelo</label>
-    <input type="text" name="model" value="<?= esc(old('model', $vehicle['model'] ?? '')) ?>" required><br>
+            <div class="space-y-5">
+                <div>
+                    <label class="label">Modelo</label>
+                    <input type="text" name="model" class="input"
+                        value="<?= esc(old('model', $vehicle['model'] ?? '')) ?>" required>
+                </div>
 
-    <label>Ano</label>
-    <input type="number" name="year" value="<?= esc(old('year', $vehicle['year'] ?? '')) ?>" required><br>
+                <div>
+                    <label class="label">Ano</label>
+                    <input type="number" name="year" class="input"
+                        value="<?= esc(old('year', $vehicle['year'] ?? '')) ?>" required>
+                </div>
 
-    <label>Data de aquisição</label>
-    <input type="date" name="acquisition_date"
-        value="<?= esc(old('acquisition_date', $vehicle['acquisition_date'] ?? '')) ?>" required><br>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="label">Data de aquisição</label>
+                        <input type="date" name="acquisition_date" class="input"
+                            value="<?= esc(old('acquisition_date', $vehicle['acquisition_date'] ?? '')) ?>" required>
+                    </div>
+                    <div>
+                        <label class="label">KM na aquisição</label>
+                        <input type="number" name="acquisition_km" class="input"
+                            value="<?= esc(old('acquisition_km', $vehicle['acquisition_km'] ?? '')) ?>" required>
+                    </div>
+                </div>
 
-    <label>KM na aquisição</label>
-    <input type="number" name="acquisition_km"
-        value="<?= esc(old('acquisition_km', $vehicle['acquisition_km'] ?? '')) ?>" required><br>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="label">Renavam</label>
+                        <input type="text" name="renavam" class="input"
+                            value="<?= esc(old('renavam', $vehicle['renavam'] ?? '')) ?>" required>
+                    </div>
+                    <div>
+                        <label class="label">Placa</label>
+                        <input type="text" name="plate" class="input"
+                            value="<?= esc(old('plate', $vehicle['plate'] ?? '')) ?>" required>
+                    </div>
+                </div>
+            </div>
 
-    <label>Renavam</label>
-    <input type="text" name="renavam" value="<?= esc(old('renavam', $vehicle['renavam'] ?? '')) ?>" required><br>
-
-    <label>Placa</label>
-    <input type="text" name="plate" value="<?= esc(old('plate', $vehicle['plate'] ?? '')) ?>" required><br>
-
-    <button type="submit">Salvar</button>
-</form>
+            <div class="mt-8 flex justify-end gap-3 border-t border-slate-100 pt-6">
+                <a href="/vehicles" class="btn-secondary">Cancelar</a>
+                <button type="submit" class="btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <?= $this->endSection() ?>

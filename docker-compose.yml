@@ -6,8 +6,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: entrevista
+      TZ: America/Campo_Grande
     ports:
       - "5432:5432"
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./storage/database:/var/lib/postgresql/data
+      

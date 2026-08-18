@@ -124,3 +124,7 @@ _modules/*
 
 /results/
 /phpunit.xml
+
+# Dados do Postgres montados pelo docker-compose (arquivos binários do
+# banco, não código - referente ao volume ./storage/database do compose)
+/storage/database/

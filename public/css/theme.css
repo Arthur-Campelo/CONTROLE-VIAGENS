@@ -1,0 +1,49 @@
+@layer components {
+    .btn {
+        @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    }
+
+    .btn-primary {
+        @apply btn bg-brand-600 text-white hover:bg-brand-700 focus-visible:ring-brand-500;
+    }
+
+    .btn-secondary {
+        @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-slate-400;
+    }
+
+    .btn-danger {
+        @apply btn bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500;
+    }
+
+    .card {
+        @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+    }
+
+    .label {
+        @apply mb-1 block text-sm font-medium text-slate-700;
+    }
+
+    .input {
+        @apply w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30;
+    }
+
+    .nav-link {
+        @apply rounded-md px-1 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+    }
+
+    .alert {
+        @apply flex items-start gap-2 rounded-lg px-4 py-3 text-sm;
+    }
+
+    .alert-success {
+        @apply alert bg-green-50 text-green-800;
+    }
+
+    .alert-error {
+        @apply alert bg-red-50 text-red-800;
+    }
+
+    .plate-badge {
+        @apply inline-block rounded-md border-2 border-t-4 border-slate-300 border-t-brand-600 bg-slate-50 px-2 py-1 font-mono text-xs font-bold uppercase tracking-wider text-slate-800;
+    }
+}

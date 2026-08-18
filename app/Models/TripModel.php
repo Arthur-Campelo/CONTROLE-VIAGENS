@@ -12,9 +12,6 @@ class TripModel extends Model
     protected $allowedFields = ['vehicle_id', 'initial_km', 'final_km', 'start_datetime', 'end_datetime'];
 
     protected $validationRules = [
-        // is_not_unique[vehicles.id] = "esse ID precisa existir na tabela vehicles".
-        // Sem essa regra, um vehicle_id inválido só falhava lá na hora do INSERT,
-        // com um erro cru de foreign key em vez de uma mensagem amigável no formulário.
         'vehicle_id'     => 'required|integer|is_not_unique[vehicles.id]',
         'initial_km'     => 'required|integer',
         'final_km'       => 'required|integer|greater_than_equal_to[{initial_km}]',
@@ -39,15 +36,6 @@ class TripModel extends Model
         }
     }
 
-    /**
-     * NOVO: faltava esse método. O Controller original tentava fazer
-     * `$this->tripModel->db->table(...)` para limpar os vínculos antigos
-     * antes de regravar - só que `$db` é uma propriedade PROTECTED da
-     * classe Model, inacessível de fora. Isso quebrava com erro fatal de
-     * visibilidade toda vez que uma viagem era editada ou excluída.
-     * Encapsulando aqui dentro do Model (onde $this->db É acessível)
-     * resolve isso definitivamente.
-     */
     public function detachDrivers(int $tripId): void
     {
         $this->db->table('trip_driver')->where('trip_id', $tripId)->delete();
@@ -63,13 +51,6 @@ class TripModel extends Model
             ->getResultArray();
     }
 
-    /**
-     * NOVO: confere se TODOS os IDs de motorista enviados pelo formulário
-     * realmente existem na tabela drivers. Protege contra um motorista
-     * excluído entre o momento em que o formulário foi carregado e o
-     * momento em que foi enviado (senão o insertBatch() na tabela pivot
-     * quebraria com um erro cru de foreign key).
-     */
     public function driversExist(array $driverIds): bool
     {
         if (empty($driverIds)) {
@@ -85,11 +66,6 @@ class TripModel extends Model
         return $found === count($unique);
     }
 
-    /**
-     * NOVO: antes só devolvia vehicle_id (número cru). Agora já traz o
-     * modelo e a placa do veículo junto, pra listagem não mostrar um ID
-     * sem contexto nenhum pro usuário.
-     */
     public function getTripsWithDetails(): array
     {
         $trips = $this->db->table('trips')
