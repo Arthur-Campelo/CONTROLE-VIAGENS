@@ -1,88 +1,102 @@
-# CodeIgniter 4 Application Starter
+# Controle de Viagens
 
-## What is CodeIgniter?
+Sistema de CRUD para controle de viagens (veículos, motoristas e viagens), desenvolvido como projeto de avaliação técnica.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Tecnologias utilizadas
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+| Tecnologia | Papel no projeto |
+|---|---|
+| **PHP 8.1+** | Linguagem da aplicação |
+| **CodeIgniter 4** | Framework web (MVC, roteamento, ORM básico, migrations) |
+| **CodeIgniter Shield** | Autenticação (login obrigatório, sessão) |
+| **PostgreSQL 14** | Banco de dados |
+| **Docker / Docker Compose** | Ambiente do banco de dados |
+| **Tailwind CSS 3** | Estilização da interface |
+| **Composer** | Gerenciador de dependências PHP |
+| **npm** | Gerenciador de dependências para o build do CSS |
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Funcionalidades
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- **CRUD de Veículos** — modelo, ano, data de aquisição, KM na aquisição, Renavam (único) e placa (única)
+- **CRUD de Motoristas** — nome, data de nascimento (idade mínima de 18 anos validada) e número da CNH
+- **CRUD de Viagens** — vínculo N:N com motoristas e N:1 com veículo, KM inicial/final (final ≥ inicial), data/hora inicial e de chegada (chegada ≥ início)
+- **Login obrigatório** para acessar qualquer tela do sistema, via CodeIgniter Shield
 
-## Installation & updates
+## Decisões de escopo
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- Aplicação **monólito**, com as telas renderizadas pelo próprio CodeIgniter (sem front-end separado)
+- Uma viagem só é criada **já finalizada** — todos os campos são preenchidos de uma vez, não existe estado "em andamento"
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+## Requisitos para rodar
 
-## Setup
+- PHP 8.1+ com as extensões: `pdo_pgsql`, `pgsql`, `mbstring`, `intl`, `curl`
+- [Composer](https://getcomposer.org)
+- [Docker](https://www.docker.com/products/docker-desktop/) e Docker Compose
+- [Node.js](https://nodejs.org) e npm (só para gerar o CSS)
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+> **Observação:** só o banco de dados está containerizado neste projeto — a aplicação PHP em si roda localmente (via `php spark serve`), não dentro de um container Docker. Não cheguei a montar a containerização completa da aplicação dentro do prazo; ficou como uma melhoria que gostaria de voltar a fazer com mais tempo. O `docker-compose.yml` fornecido cuida só do Postgres, e os passos abaixo cobrem exatamente como rodar o restante.
 
-## Important Change with index.php
+## Como rodar
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+1. Clone o repositório e entre na pasta do projeto.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+2. Suba o banco de dados:
+   ```bash
+   docker compose up -d
+   ```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+3. Instale as dependências PHP:
+   ```bash
+   composer install
+   ```
 
-## Repository Management
+4. Configure o `.env`:
+   ```bash
+   cp env .env
+   ```
+   E ajuste:
+   ```ini
+   CI_ENVIRONMENT = development
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+   database.default.hostname = 127.0.0.1
+   database.default.database = entrevista
+   database.default.username = postgres
+   database.default.password = postgres
+   database.default.DBDriver = Postgre
+   database.default.port = 5432
+   ```
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+5. Rode as migrations (cria as tabelas do domínio e do Shield):
+   ```bash
+   php spark migrate --all
+   ```
 
-## Server Requirements
+6. Crie um usuário para conseguir logar:
+   ```bash
+   php spark shield:user create
+   ```
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+7. Instale as dependências do front-end e gere o CSS:
+   ```bash
+   npm install
+   npx tailwindcss -i resources/css/input.css -o public/css/tailwind.css
+   ```
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+8. Suba a aplicação:
+   ```bash
+   php spark serve
+   ```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+9. Acesse `http://localhost:8080` e faça login com o usuário criado no passo 6.
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+## Estrutura relevante
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-     * Como o CI4 não possui uma ORM complexa (capaz de cuidar de relacionamentos como N:N com "hasMany") eu verifiquei 
-     * algumas bibliotecas que poderia instalar para "cuidar" dessa parte, mas cheguei a conclusão que faz parte da natureza 
-     * do framework como tbm do desafio manejar esses relacionamentos manualmente.
-    */
+```
+app/Controllers/     Controllers das 3 entidades (Vehicle, Driver, Trip)
+app/Models/           Models com validação e regras de negócio
+app/Views/            Telas (layout + vehicles/drivers/trips)
+app/Database/Migrations/   Schema do banco (domínio + Shield)
+resources/css/         Código-fonte do Tailwind
+tailwind.config.js     Configuração do Tailwind (cores, caminhos escaneados)
+docker-compose.yml      Ambiente do Postgres
+```
