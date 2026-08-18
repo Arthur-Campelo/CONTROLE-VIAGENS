@@ -78,8 +78,6 @@ class DriverController extends BaseController
 
         $driver = $this->driverModel->find($id);
 
-        // NOVO: mesmo problema do VehicleController - ID inexistente
-        // quebrava a view antes.
         if ($driver === null) {
             return redirect()->to('/drivers')->with('errors', ['Motorista não encontrado.']);
         }
@@ -97,8 +95,6 @@ class DriverController extends BaseController
             return redirect()->to('/drivers')->with('errors', ['Motorista não encontrado.']);
         }
 
-        // NOVO: motorista vinculado a alguma viagem (tabela trip_driver)
-        // não pode ser excluído por causa da foreign key RESTRICT.
         try {
             $this->driverModel->delete($id);
         } catch (DatabaseException $e) {

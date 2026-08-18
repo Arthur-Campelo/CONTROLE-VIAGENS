@@ -58,9 +58,6 @@ class TripController extends BaseController
                 ->with('errors', ['Selecione ao menos um motorista.']);
         }
 
-        // NOVO: antes, um driver_id inválido (ex.: motorista excluído entre
-        // abrir o formulário e enviar) só ia quebrar depois, no insertBatch
-        // da tabela pivot, com um erro cru de foreign key.
         if (! $this->tripModel->driversExist($driverIds)) {
             return redirect()->back()->withInput()
                 ->with('errors', ['Um ou mais motoristas selecionados não existem mais. Atualize a página e tente de novo.']);
@@ -139,9 +136,6 @@ class TripController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->tripModel->errors());
         }
 
-        // Remove os vínculos antigos e grava os novos (mais simples que fazer diff).
-        // CORRIGIDO: chamando o método público do Model em vez de tentar
-        // acessar a propriedade protected $db diretamente daqui de fora.
         $this->tripModel->detachDrivers((int) $id);
         $this->tripModel->attachDrivers((int) $id, $driverIds);
 
@@ -156,7 +150,6 @@ class TripController extends BaseController
 
         $trip = $this->tripModel->find($id);
 
-        // NOVO: mesmo padrão de proteção aplicado a Veículos e Motoristas.
         if ($trip === null) {
             return redirect()->to('/trips')->with('errors', ['Viagem não encontrada.']);
         }
@@ -174,9 +167,6 @@ class TripController extends BaseController
             return redirect()->to('/trips')->with('errors', ['Viagem não encontrada.']);
         }
 
-        // Viagem não é referenciada por nenhuma outra tabela (só referencia
-        // vehicle e drivers), então não tem risco de violação de FK aqui -
-        // mas o vínculo na tabela pivot precisa ser limpo manualmente.
         $this->tripModel->detachDrivers((int) $id);
         $this->tripModel->delete($id);
 

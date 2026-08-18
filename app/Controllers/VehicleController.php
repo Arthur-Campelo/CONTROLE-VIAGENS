@@ -37,18 +37,12 @@ class VehicleController extends BaseController
 
     public function edit($id = null)
     {
-        // NOVO: um :id não-numérico (ex.: /vehicles/edit/abc) ia direto pro
-        // find(), e o Postgres rejeita comparar uma coluna INT com uma
-        // string não-numérica - resultava numa exceção de banco não
-        // tratada. Bloqueando aqui antes de tocar no banco.
         if (! is_numeric($id)) {
             return redirect()->to('/vehicles')->with('errors', ['ID inválido.']);
         }
 
         $vehicle = $this->vehicleModel->find($id);
 
-        // NOVO: antes só o edit() checava isso. Padronizado em todos os
-        // métodos que recebem um :id vindo da URL.
         if ($vehicle === null) {
             return redirect()->to('/vehicles')->with('errors', ['Veículo não encontrado.']);
         }
@@ -84,8 +78,6 @@ class VehicleController extends BaseController
 
         $vehicle = $this->vehicleModel->find($id);
 
-        // NOVO: antes, um ID inexistente chegava direto na view e quebrava
-        // ao tentar ler $vehicle['model'] de um null.
         if ($vehicle === null) {
             return redirect()->to('/vehicles')->with('errors', ['Veículo não encontrado.']);
         }
@@ -103,10 +95,6 @@ class VehicleController extends BaseController
             return redirect()->to('/vehicles')->with('errors', ['Veículo não encontrado.']);
         }
 
-        // NOVO: se o veículo estiver vinculado a alguma viagem, o banco
-        // recusa o DELETE por causa da foreign key (RESTRICT) da tabela
-        // trips. Antes isso derrubava a aplicação com uma tela de erro
-        // crua; agora vira uma mensagem amigável.
         try {
             $this->vehicleModel->delete($id);
         } catch (DatabaseException $e) {
