@@ -34,7 +34,7 @@ Sistema de CRUD para controle de viagens (veículos, motoristas e viagens), dese
 - [Docker](https://www.docker.com/products/docker-desktop/) e Docker Compose
 - [Node.js](https://nodejs.org) e npm (só para gerar o CSS)
 
-> **Observação:** só o banco de dados está containerizado neste projeto — a aplicação PHP em si roda localmente (via `php spark serve`), não dentro de um container Docker. Não cheguei a montar a containerização completa da aplicação dentro do prazo; ficou como uma melhoria que gostaria de voltar a fazer com mais tempo. O `docker-compose.yml` fornecido cuida só do Postgres, e os passos abaixo cobrem exatamente como rodar o restante.
+> **Observação:** o Docker Compose cobre apenas o banco de dados, conforme fornecido no enunciado do desafio. A aplicação PHP roda localmente — veja o passo a passo abaixo.
 
 ## Como rodar
 
@@ -54,7 +54,7 @@ Sistema de CRUD para controle de viagens (veículos, motoristas e viagens), dese
    ```bash
    cp env .env
    ```
-   E ajuste:
+   E descomente/adicione os seguintes:
    ```ini
    CI_ENVIRONMENT = development
 
@@ -64,6 +64,7 @@ Sistema de CRUD para controle de viagens (veículos, motoristas e viagens), dese
    database.default.password = postgres
    database.default.DBDriver = Postgre
    database.default.port = 5432
+   database.default.charset = utf8
    ```
 
 5. Rode as migrations (cria as tabelas do domínio e do Shield):
@@ -74,20 +75,17 @@ Sistema de CRUD para controle de viagens (veículos, motoristas e viagens), dese
 6. Crie um usuário para conseguir logar:
    ```bash
    php spark shield:user create
+   user: admin
+   email: admin1@gmail.com
+   password: adminadmin
    ```
 
-7. Instale as dependências do front-end e gere o CSS:
-   ```bash
-   npm install
-   npx tailwindcss -i resources/css/input.css -o public/css/tailwind.css
-   ```
-
-8. Suba a aplicação:
+7. Suba a aplicação:
    ```bash
    php spark serve
    ```
 
-9. Acesse `http://localhost:8080` e faça login com o usuário criado no passo 6.
+8. Acesse `http://localhost:8080` e faça login com o usuário criado no passo 6.
 
 ## Estrutura relevante
 
